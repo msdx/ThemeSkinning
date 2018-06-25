@@ -78,4 +78,8 @@ public class SkinResourcesUtils {
     public static boolean isNightMode() {
         return SkinManager.getInstance().isNightMode();
     }
+
+    public static boolean isExternalSkin() {
+        return SkinManager.getInstance().isExternalSkin();
+    }
 }

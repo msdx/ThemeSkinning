@@ -100,7 +100,7 @@ public class SkinManager implements ISkinLoader {
         return -1;
     }
 
-    boolean isExternalSkin() {
+    public boolean isExternalSkin() {
         return !isDefaultSkin && mResources != null;
     }
 
