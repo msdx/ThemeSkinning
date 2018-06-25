@@ -20,7 +20,7 @@
 
 ### 1. 集成步骤：
 
-1. 添加依赖 <code>compile 'com.solid.skin:skinlibrary:latestVersion' </code>
+1. 添加依赖 `implementation 'com.solid.skin:skinlibrary:latestVersion' ` 或 `implementation 'com.githang:theme-skinning:2.0.1-SNAPSHOT'`
 
 2. 让你的 Application 继承于 SkinBaseApplication
 
