@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "solid.ren.themeskinning"
@@ -26,19 +26,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:26.1.0'
-    compile('com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.8.5', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:design:26.1.0'
+    implementation('com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.8.5', {
         exclude group: 'com.android.support'
     })
-    compile('com.afollestad.material-dialogs:core:0.8.6.1', {
+    implementation('com.afollestad.material-dialogs:core:0.8.6.1', {
         exclude group: 'com.android.support'
     })
-    //compile 'com.solid.skin:skinlibrary:2.0.0-beta3'
-    compile project(':skinlibrary')
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    //implementation 'com.solid.skin:skinlibrary:2.0.0-beta3'
+    implementation project(':skinlibrary')
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
