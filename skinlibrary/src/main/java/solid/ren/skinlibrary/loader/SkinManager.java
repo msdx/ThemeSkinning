@@ -29,9 +29,9 @@ import solid.ren.skinlibrary.utils.TypefaceUtils;
 
 
 /**
- * Created by _SOLID
- * Date:2016/4/13
- * Time:21:07
+ * @author _SOLID
+ * @author Geek_Soledad (http://github.com/msdx/)
+ * @since 2016/4/13 21:07
  */
 public class SkinManager implements ISkinLoader {
     private static final String TAG = "SkinManager";
@@ -64,7 +64,7 @@ public class SkinManager implements ISkinLoader {
     public void init(Context ctx) {
         context = ctx.getApplicationContext();
         TypefaceUtils.CURRENT_TYPEFACE = TypefaceUtils.getTypeface(context);
-        setUpSkinFile(context);
+        setUpSkinFiles(context);
         if (SkinConfig.isInNightMode(ctx)) {
             SkinManager.getInstance().nightMode();
         } else {
@@ -76,12 +76,12 @@ public class SkinManager implements ISkinLoader {
         }
     }
 
-    private void setUpSkinFile(Context context) {
+    private void setUpSkinFiles(Context context) {
         try {
             String[] skinFiles = context.getAssets().list(SkinConfig.SKIN_DIR_NAME);
             for (String fileName : skinFiles) {
                 File file = new File(SkinFileUtils.getSkinDir(context), fileName);
-                if (!file.exists()) {
+                if (!file.exists() || !SkinFileUtils.isSameFile(context, fileName, file)) {
                     SkinFileUtils.copySkinAssetsToDir(context, fileName, SkinFileUtils.getSkinDir(context));
                 }
             }
@@ -191,7 +191,6 @@ public class SkinManager implements ISkinLoader {
                         AssetManager assetManager = AssetManager.class.newInstance();
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
                         addAssetPath.invoke(assetManager, skinPkgPath);
-
 
                         Resources superRes = context.getResources();
                         Resources skinResource = ResourcesCompat.getResources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
