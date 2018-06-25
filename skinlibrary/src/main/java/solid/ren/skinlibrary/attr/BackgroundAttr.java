@@ -1,15 +1,16 @@
 package solid.ren.skinlibrary.attr;
 
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import solid.ren.skinlibrary.attr.base.SkinAttr;
 import solid.ren.skinlibrary.utils.SkinResourcesUtils;
 
 /**
- * Created by _SOLID
- * Date:2016/4/13
- * Time:21:46
+ * @author _SOLID
+ * @author Geek_Soledad
+ * @since 2016/4/13 21:46
  */
 public class BackgroundAttr extends SkinAttr {
 
@@ -20,7 +21,7 @@ public class BackgroundAttr extends SkinAttr {
             view.setBackgroundColor(color);
         } else if (isDrawable()) {
             Drawable bg = SkinResourcesUtils.getDrawable(attrValueRefId);
-            view.setBackgroundDrawable(bg);
+            ViewCompat.setBackground(view, bg);
         }
     }
 
@@ -29,7 +30,7 @@ public class BackgroundAttr extends SkinAttr {
         if (isColor()) {
             view.setBackgroundColor(SkinResourcesUtils.getNightColor(attrValueRefId));
         } else if (isDrawable()) {
-            view.setBackgroundDrawable(SkinResourcesUtils.getNightDrawable(attrValueRefName));
+            ViewCompat.setBackground(view, SkinResourcesUtils.getNightDrawable(attrValueRefName));
         }
     }
 }

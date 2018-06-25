@@ -5,14 +5,14 @@ import android.view.View;
 import solid.ren.skinlibrary.utils.SkinResourcesUtils;
 
 /**
- * Created by _SOLID
- * Date:2016/4/13
- * Time:21:38
+ * @author _SOLID
+ * @author Geek_Soledad
+ * @since 2016/4/13 21:46
  */
 public abstract class SkinAttr implements Cloneable {
-    protected static final String RES_TYPE_NAME_COLOR = "color";
-    protected static final String RES_TYPE_NAME_DRAWABLE = "drawable";
-    protected static final String RES_TYPE_NAME_MIPMAP = "mipmap";
+    private static final String RES_TYPE_NAME_COLOR = "color";
+    private static final String RES_TYPE_NAME_DRAWABLE = "drawable";
+    private static final String RES_TYPE_NAME_MIPMAP = "mipmap";
     /**
      * attribute name, eg: background、textColor
      */

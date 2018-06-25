@@ -23,12 +23,10 @@ import solid.ren.skinlibrary.attr.base.SkinAttr;
 import solid.ren.skinlibrary.utils.SkinL;
 import solid.ren.skinlibrary.utils.SkinListUtils;
 
-import static android.R.attr.textColor;
-
 /**
- * Created by _SOLID
- * Date:2016/4/13
- * Time:21:19
+ * @author _SOLID
+ * @author Geek_Soledad
+ * @since 2016/4/13 21:46
  * <div>
  * 自定义的InflaterFactory，用来代替默认的LayoutInflaterFactory
  * Ref: <a href="http://willowtreeapps.com/blog/app-development-how-to-get-the-right-layoutinflater/"> How to Get the Right LayoutInflater</a>
@@ -40,7 +38,7 @@ public class SkinInflaterFactory implements LayoutInflater.Factory2 {
     /**
      * 存储那些有皮肤更改需求的View及其对应的属性的集合
      */
-    private Map<View, SkinItem> mSkinItemMap = new HashMap<>();
+    private final Map<View, SkinItem> mSkinItemMap = new HashMap<>();
     private AppCompatActivity mAppCompatActivity;
 
     public SkinInflaterFactory(AppCompatActivity appCompatActivity) {
@@ -188,7 +186,6 @@ public class SkinInflaterFactory implements LayoutInflater.Factory2 {
         }
         TextViewRepository.remove(mAppCompatActivity);
         mSkinItemMap.clear();
-        mSkinItemMap = null;
     }
 
     private void addSkinView(SkinItem item) {

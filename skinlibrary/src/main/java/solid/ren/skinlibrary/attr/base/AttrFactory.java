@@ -7,9 +7,9 @@ import solid.ren.skinlibrary.attr.ImageViewSrcAttr;
 import solid.ren.skinlibrary.attr.TextColorAttr;
 
 /**
- * Created by _SOLID
- * Date:2016/4/14
- * Time:9:47
+ * @author _SOLID
+ * @author Geek_Soledad
+ * @since 2016/4/13 21:46
  */
 public class AttrFactory {
 
@@ -24,7 +24,9 @@ public class AttrFactory {
 
     public static SkinAttr get(String attrName, int attrValueRefId, String attrValueRefName, String typeName) {
         SkinAttr mSkinAttr = sSupportAttr.get(attrName).clone();
-        if (mSkinAttr == null) return null;
+        if (mSkinAttr == null) {
+            return null;
+        }
         mSkinAttr.attrName = attrName;
         mSkinAttr.attrValueRefId = attrValueRefId;
         mSkinAttr.attrValueRefName = attrValueRefName;

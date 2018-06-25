@@ -36,8 +36,8 @@ class ViewProducer {
             mConstructorArgs[1] = attrs;
 
             if (-1 == name.indexOf('.')) {
-                for (int i = 0; i < sClassPrefixList.length; i++) {
-                    final View view = createView(context, name, sClassPrefixList[i]);
+                for (String aSClassPrefixList : sClassPrefixList) {
+                    final View view = createView(context, name, aSClassPrefixList);
                     if (view != null) {
                         return view;
                     }
@@ -58,7 +58,7 @@ class ViewProducer {
     }
 
     private static View createView(Context context, String name, String prefix)
-            throws ClassNotFoundException, InflateException {
+            throws InflateException {
         Constructor<? extends View> constructor = sConstructorMap.get(name);
 
         try {
@@ -78,30 +78,4 @@ class ViewProducer {
             return null;
         }
     }
-
-
-    //    private View createView(Context context, String name, AttributeSet attrs) {
-//        Log.i(TAG, "createView:" + name);
-//        View view = null;
-//        try {
-//            if (-1 == name.indexOf('.')) {
-//                if ("View".equals(name)) {
-//                    view = LayoutInflater.from(context).createView(name, "android.view.", attrs);
-//                }
-//                if (view == null) {
-//                    view = LayoutInflater.from(context).createView(name, "android.widget.", attrs);
-//                }
-//                if (view == null) {
-//                    view = LayoutInflater.from(context).createView(name, "android.webkit.", attrs);
-//                }
-//            } else {
-//                view = LayoutInflater.from(context).createView(name, null, attrs);
-//            }
-//
-//        } catch (Exception e) {
-//            SkinL.e(TAG, "Error while create 【" + name + "】 : " + e.getMessage());
-//            view = null;
-//        }
-//        return view;
-//    }
 }

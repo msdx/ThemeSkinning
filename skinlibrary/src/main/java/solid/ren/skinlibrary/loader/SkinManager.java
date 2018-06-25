@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.RestrictTo;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.util.List;
 import solid.ren.skinlibrary.ISkinUpdate;
 import solid.ren.skinlibrary.SkinConfig;
 import solid.ren.skinlibrary.SkinLoaderListener;
-import solid.ren.skinlibrary.utils.ResourcesCompat;
 import solid.ren.skinlibrary.utils.SkinFileUtils;
 import solid.ren.skinlibrary.utils.SkinL;
 import solid.ren.skinlibrary.utils.TypefaceUtils;
@@ -36,29 +36,20 @@ import solid.ren.skinlibrary.utils.TypefaceUtils;
 public class SkinManager implements ISkinLoader {
     private static final String TAG = "SkinManager";
     private List<ISkinUpdate> mSkinObservers;
-    @SuppressLint("StaticFieldLeak")
-    private static volatile SkinManager mInstance;
     private Context context;
     private Resources mResources;
     private boolean isDefaultSkin = false;
     /**
      * skin package name
      */
-    private String skinPackageName;
+    private String mSkinPackageName;
 
     private SkinManager() {
 
     }
 
     public static SkinManager getInstance() {
-        if (mInstance == null) {
-            synchronized (SkinManager.class) {
-                if (mInstance == null) {
-                    mInstance = new SkinManager();
-                }
-            }
-        }
-        return mInstance;
+        return Holder.instance;
     }
 
     public void init(Context ctx) {
@@ -92,9 +83,9 @@ public class SkinManager implements ISkinLoader {
 
     public int getColorPrimaryDark() {
         if (mResources != null) {
-            int identify = mResources.getIdentifier("colorPrimaryDark", "color", skinPackageName);
+            int identify = mResources.getIdentifier("colorPrimaryDark", "color", mSkinPackageName);
             if (identify > 0) {
-                return mResources.getColor(identify);
+                return ResourcesCompat.getColor(mResources, identify, null);
             }
         }
         return -1;
@@ -105,7 +96,7 @@ public class SkinManager implements ISkinLoader {
     }
 
     public String getCurSkinPackageName() {
-        return skinPackageName;
+        return mSkinPackageName;
     }
 
     public Resources getResources() {
@@ -117,7 +108,7 @@ public class SkinManager implements ISkinLoader {
         isDefaultSkin = true;
         SkinConfig.setNightMode(context, false);
         mResources = context.getResources();
-        skinPackageName = context.getPackageName();
+        mSkinPackageName = context.getPackageName();
         notifySkinUpdate();
     }
 
@@ -187,13 +178,13 @@ public class SkinManager implements ISkinLoader {
                         }
                         PackageManager mPm = context.getPackageManager();
                         PackageInfo mInfo = mPm.getPackageArchiveInfo(skinPkgPath, PackageManager.GET_ACTIVITIES);
-                        skinPackageName = mInfo.packageName;
+                        mSkinPackageName = mInfo.packageName;
                         AssetManager assetManager = AssetManager.class.newInstance();
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
                         addAssetPath.invoke(assetManager, skinPkgPath);
 
                         Resources superRes = context.getResources();
-                        Resources skinResource = ResourcesCompat.getResources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
+                        Resources skinResource = new Resources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
                         SkinConfig.saveSkinPath(context, params[0]);
 
                         isDefaultSkin = false;
@@ -223,7 +214,6 @@ public class SkinManager implements ISkinLoader {
                     }
                 }
             }
-
         }.execute(skinName);
     }
 
@@ -257,7 +247,7 @@ public class SkinManager implements ISkinLoader {
 
         String resName = context.getResources().getResourceEntryName(resId);
 
-        int trueResId = mResources.getIdentifier(resName, "color", skinPackageName);
+        int trueResId = mResources.getIdentifier(resName, "color", mSkinPackageName);
         int trueColor;
         if (trueResId == 0) {
             trueColor = originColor;
@@ -272,7 +262,7 @@ public class SkinManager implements ISkinLoader {
 
         String resName = mResources.getResourceEntryName(resId);
         String resNameNight = resName + "_night";
-        int nightResId = mResources.getIdentifier(resNameNight, "color", skinPackageName);
+        int nightResId = mResources.getIdentifier(resNameNight, "color", mSkinPackageName);
         if (nightResId == 0) {
             return ContextCompat.getColorStateList(context, resId);
         } else {
@@ -282,10 +272,9 @@ public class SkinManager implements ISkinLoader {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     public int getNightColor(int resId) {
-
         String resName = mResources.getResourceEntryName(resId);
         String resNameNight = resName + "_night";
-        int nightResId = mResources.getIdentifier(resNameNight, "color", skinPackageName);
+        int nightResId = mResources.getIdentifier(resNameNight, "color", mSkinPackageName);
         if (nightResId == 0) {
             return ContextCompat.getColor(context, resId);
         } else {
@@ -295,24 +284,23 @@ public class SkinManager implements ISkinLoader {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     public Drawable getNightDrawable(String resName) {
+        final String resNameNight = resName + "_night";
 
-        String resNameNight = resName + "_night";
-
-        int nightResId = mResources.getIdentifier(resNameNight, "drawable", skinPackageName);
+        int nightResId = getDrawableResId(resNameNight);
         if (nightResId == 0) {
-            nightResId = mResources.getIdentifier(resNameNight, "mipmap", skinPackageName);
-        }
-        Drawable color;
-        if (nightResId == 0) {
-            int resId = mResources.getIdentifier(resName, "drawable", skinPackageName);
-            if (resId == 0) {
-                resId = mResources.getIdentifier(resName, "mipmap", skinPackageName);
-            }
-            color = mResources.getDrawable(resId);
+            int resId = getDrawableResId(resName);
+            return ResourcesCompat.getDrawable(mResources, resId, null);
         } else {
-            color = mResources.getDrawable(nightResId);
+            return ResourcesCompat.getDrawable(mResources, nightResId, null);
         }
-        return color;
+    }
+
+    private int getDrawableResId(String resName) {
+        int nightResId = mResources.getIdentifier(resName, "drawable", mSkinPackageName);
+        if (nightResId == 0) {
+            nightResId = mResources.getIdentifier(resName, "mipmap", mSkinPackageName);
+        }
+        return nightResId;
     }
 
     /**
@@ -329,18 +317,12 @@ public class SkinManager implements ISkinLoader {
             return originDrawable;
         }
         String resName = context.getResources().getResourceEntryName(resId);
-        int trueResId = mResources.getIdentifier(resName, dir, skinPackageName);
-        Drawable trueDrawable;
+        int trueResId = mResources.getIdentifier(resName, dir, mSkinPackageName);
         if (trueResId == 0) {
-            trueDrawable = originDrawable;
+            return originDrawable;
         } else {
-            if (android.os.Build.VERSION.SDK_INT < 22) {
-                trueDrawable = mResources.getDrawable(trueResId);
-            } else {
-                trueDrawable = mResources.getDrawable(trueResId, null);
-            }
+            return ResourcesCompat.getDrawable(mResources, trueResId, null);
         }
-        return trueDrawable;
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -350,21 +332,12 @@ public class SkinManager implements ISkinLoader {
             return originDrawable;
         }
         String resName = context.getResources().getResourceEntryName(resId);
-        int trueResId = mResources.getIdentifier(resName, "drawable", skinPackageName);
-        Drawable trueDrawable;
+        int trueResId = getDrawableResId(resName);
         if (trueResId == 0) {
-            trueResId = mResources.getIdentifier(resName, "mipmap", skinPackageName);
-        }
-        if (trueResId == 0) {
-            trueDrawable = originDrawable;
+            return originDrawable;
         } else {
-            if (android.os.Build.VERSION.SDK_INT < 22) {
-                trueDrawable = mResources.getDrawable(trueResId);
-            } else {
-                trueDrawable = mResources.getDrawable(trueResId, null);
-            }
+            return ResourcesCompat.getDrawable(mResources, trueResId, null);
         }
-        return trueDrawable;
     }
 
     /**
@@ -384,18 +357,17 @@ public class SkinManager implements ISkinLoader {
 
         String resName = context.getResources().getResourceEntryName(resId);
         if (isExternalSkin) {
-            int trueResId = mResources.getIdentifier(resName, "color", skinPackageName);
-            ColorStateList trueColorList;
-            if (trueResId == 0) { // 如果皮肤包没有复写该资源，但是需要判断是否是ColorStateList
-
-                return ContextCompat.getColorStateList(context, resId);
-            } else {
-                trueColorList = mResources.getColorStateList(trueResId);
-                return trueColorList;
+            int trueResId = mResources.getIdentifier(resName, "color", mSkinPackageName);
+            if (trueResId != 0) {
+                return ResourcesCompat.getColorStateList(mResources, trueResId, null);
             }
-        } else {
-            return ContextCompat.getColorStateList(context, resId);
         }
+        return ContextCompat.getColorStateList(context, resId);
     }
     //endregion
+
+    private static class Holder {
+        @SuppressLint("StaticFieldLeak")
+        private static final SkinManager instance = new SkinManager();
+    }
 }
