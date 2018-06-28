@@ -1,4 +1,4 @@
-[![Download](https://api.bintray.com/packages/solid/maven/theme-skinning/images/download.svg) ](https://bintray.com/solid/maven/theme-skinning/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/msdx/maven/ThemeSkinning/images/download.svg) ](https://bintray.com/msdx/maven/ThemeSkinning/_latestVersion)
 [![API](https://img.shields.io/badge/API-9%2B-green.svg?style=flat)](https://android-arsenal.com/api?level=9)
 
 ### Android 主题换肤的开源库（插件化换肤）
@@ -20,7 +20,7 @@
 
 ### 1. 集成步骤：
 
-1. 添加依赖 `implementation 'com.solid.skin:skinlibrary:latestVersion' ` 或 `implementation 'com.githang:theme-skinning:2.0.1-SNAPSHOT'`
+1. 添加依赖 `implementation 'com.githang:theme-skinning:2.0.1'`
 
 2. 让你的 Application 继承于 SkinBaseApplication
 
