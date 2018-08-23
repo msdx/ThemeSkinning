@@ -1,6 +1,7 @@
 package solid.ren.skinlibrary.attr;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
@@ -20,8 +21,7 @@ public class BackgroundAttr extends SkinAttr {
             int color = SkinResourcesUtils.getColor(attrValueRefId);
             view.setBackgroundColor(color);
         } else if (isDrawable()) {
-            Drawable bg = SkinResourcesUtils.getDrawable(attrValueRefId);
-            ViewCompat.setBackground(view, bg);
+            setBackground(view, SkinResourcesUtils.getDrawable(attrValueRefId));
         }
     }
 
@@ -30,7 +30,20 @@ public class BackgroundAttr extends SkinAttr {
         if (isColor()) {
             view.setBackgroundColor(SkinResourcesUtils.getNightColor(attrValueRefId));
         } else if (isDrawable()) {
-            ViewCompat.setBackground(view, SkinResourcesUtils.getNightDrawable(attrValueRefName));
+            setBackground(view, SkinResourcesUtils.getNightDrawable(attrValueRefName));
+        }
+    }
+
+    private void setBackground(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewCompat.setBackground(view, drawable);
+        } else {
+            int start = ViewCompat.getPaddingStart(view);
+            int top = view.getPaddingTop();
+            int end = ViewCompat.getPaddingEnd(view);
+            int bottom = view.getPaddingBottom();
+            ViewCompat.setBackground(view, drawable);
+            ViewCompat.setPaddingRelative(view, start, top, end, bottom);
         }
     }
 }
