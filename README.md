@@ -20,7 +20,7 @@
 
 ### 1. 集成步骤：
 
-1. 添加依赖 `implementation 'com.githang:theme-skinning:2.0.1'`
+1. 添加依赖 `implementation 'com.githang:theme-skinning:2.0.2'`
 
 2. 让你的 Application 继承于 SkinBaseApplication
 
